@@ -11,3 +11,5 @@ LLM を使って各通話を固定スキーマの構造化データ(通話 1 件
 
 - [docs/study/01_llm_structuring_feasibility.md](docs/study/01_llm_structuring_feasibility.md)
   「非構造→構造化→単純集計」アプローチの実現可能性検討。最新研究・商用製品の動向調査、推奨アーキテクチャ、未確定事項(質問リスト)、PoC 計画を含む。
+- [docs/study/02_decision_memo.md](docs/study/02_decision_memo.md)
+  要件ヒアリング(月 10 万件、教師データなし、人手ラベリング不可、目的は入電増の真因調査と「わかりづらい」パターン特定)を反映した意思決定メモ。作るもの・作らないもの、人手ラベルなしの品質担保、Go/No-Go 基準。
