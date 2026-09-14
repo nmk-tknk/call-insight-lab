@@ -1,0 +1,108 @@
+
+=== 0. 品質ゲート: 根拠の逐語一致 ===
+ calls  verified  rate
+    19      19.0   1.0
+
+=== A-1. テーマ(BILL_AMOUNT_INQUIRY)の週次件数と全体比 ===
+    week  total  theme_n  theme_share
+2026-W34      4      1.0         0.25
+2026-W35      4      0.0         0.00
+2026-W36      3      1.0         0.33
+2026-W37      4      3.0         0.75
+2026-W38      4      3.0         0.75
+
+=== A-2. 急増期間 vs 平常期間: trigger_code の分布(テーマ該当のみ) ===
+   trigger_code  baseline_n  spike_n  spike_share  baseline_share
+    viewed_bill         1.0      4.0         0.67             0.5
+received_notice         1.0      1.0         0.17             0.5
+  word_of_mouth         0.0      1.0         0.17             0.0
+
+=== A-2. 急増期間 vs 平常期間: touchpoint_code の分布(テーマ該当のみ) ===
+            touchpoint_code  baseline_n  spike_n  spike_share  baseline_share
+         DOC_BILL_STATEMENT         1.0      4.0         0.67             0.5
+DOC_RATE_CHANGE_NOTICE_2609         1.0      2.0         0.33             0.5
+
+=== A-2. 急増期間 vs 平常期間: confusion_touchpoint_code の分布(テーマ該当のみ) ===
+  confusion_touchpoint_code  baseline_n  spike_n  spike_share  baseline_share
+             TERM_PRORATION         0.0      3.0         0.50             0.0
+         DOC_BILL_STATEMENT         0.0      1.0         0.17             0.0
+DOC_RATE_CHANGE_NOTICE_2609         1.0      1.0         0.17             0.5
+         TERM_BILLING_CYCLE         0.0      1.0         0.17             0.0
+                      OTHER         1.0      0.0         0.00             0.5
+
+=== A-2. 急増期間 vs 平常期間: confusion_type の分布(テーマ該当のみ) ===
+  confusion_type  baseline_n  spike_n  spike_share  baseline_share
+          direct         1.0      3.0         0.50             0.5
+indirect_misread         1.0      2.0         0.33             0.5
+indirect_clarify         0.0      1.0         0.17             0.0
+
+=== A-3. 急増期間のテーマ該当通話: タグの組み合わせ(真因候補) ===
+   trigger_code   confusion_type   confusion_touchpoint_code  n
+    viewed_bill indirect_misread              TERM_PRORATION  2
+received_notice indirect_clarify          TERM_BILLING_CYCLE  1
+  word_of_mouth           direct DOC_RATE_CHANGE_NOTICE_2609  1
+    viewed_bill           direct              TERM_PRORATION  1
+    viewed_bill           direct          DOC_BILL_STATEMENT  1
+
+=== A-4. 根拠引用(急増期間・テーマ該当・無作為順) ===
+call_id   confusion_type                           confusion_evidence
+   C012 indirect_misread                      え、二重に取られてるんじゃないんですか、この行
+   C013 indirect_clarify              九月から新料金って書いてあるけど、今月の請求はどっちなんですか
+   C016           direct                         あの手紙ね、字が小さくて読めなかったのよ
+   C014           direct                   日割りって書いてあるけど計算式がどこにも載ってなくて
+   C017 indirect_misread                基本料金が先月分と今月分で二回請求されてるみたいなんですが
+   C019           direct 日割りだの改定だので金額がぐちゃぐちゃで、何にいくら払ってるのか全然わからないんですけど
+
+=== B-1. 「わかりづらい」パターン: 接点 × 訴え方 × 下流コスト ===
+  confusion_touchpoint_code   confusion_type  n  aht_sec  repeat_7d  not_resolved  negative_end
+DOC_RATE_CHANGE_NOTICE_2609           direct  2    655.0        0.0           0.0           0.0
+             TERM_PRORATION indirect_misread  2    725.0        0.0           0.0           0.0
+            APP_CANCEL_FLOW           direct  1    710.0        0.0           0.0           0.0
+         DOC_BILL_STATEMENT           direct  1   1120.0        0.0           1.0           1.0
+                  APP_LOGIN           direct  1    655.0        0.0           0.0           0.0
+                      OTHER indirect_misread  1    530.0        0.0           0.0           0.0
+       DOC_CONTRACT_CONFIRM indirect_clarify  1    470.0        0.0           0.0           0.0
+         TERM_BILLING_CYCLE indirect_clarify  1    560.0        0.0           0.0           0.0
+             TERM_PRORATION           direct  1    930.0        0.0           0.0           1.0
+
+=== B-2. 混乱を含む通話の割合(全体・週次) ===
+    week  total  confused  share
+2026-W34      4       2.0   0.50
+2026-W35      4       1.0   0.25
+2026-W36      3       2.0   0.67
+2026-W37      4       3.0   0.75
+2026-W38      4       3.0   0.75
+
+=== C-1. 外部整合: 解決状況 × 7日以内再入電(CRM 事実) ===
+resolution_status  n  repeat_7d  said_repeat
+         resolved 15        0.0          0.0
+callback_promised  2        0.5          1.0
+        escalated  2        0.0          0.0
+
+=== C-2. 語彙進化シグナル: other 率と other_text ===
+       col  other_n  n                                   other_texts
+    reason      0.0 19                                           NaN
+   trigger      0.0 19                                           NaN
+touchpoint      2.0 19 初月無料の適用条件(申込月のみ対象) | テレビCM(ファミリーまとめて割引キャンペーン)
+
+=== 全通話の一覧(確認用) ===
+call_id     week                reason_l2  request_type                 trigger_code             touchpoint_code   confusion_type   confusion_touchpoint_code resolution_status   rep emotion_end
+   C001 2026-W34           ADDRESS_CHANGE     procedure                   life_event                        NONE             none                        NONE          resolved False     neutral
+   C002 2026-W34        APP_LOGIN_TROUBLE       inquiry            app_or_web_change                   APP_LOGIN           direct                   APP_LOGIN          resolved False     neutral
+   C003 2026-W34      BILL_AMOUNT_INQUIRY       inquiry                  viewed_bill          DOC_BILL_STATEMENT indirect_misread                       OTHER          resolved False     neutral
+   C004 2026-W34           CANCEL_REQUEST cancel_intent                      unknown                        NONE             none                        NONE         escalated False    negative
+   C005 2026-W35    PAYMENT_METHOD_CHANGE     procedure                      unknown                        NONE             none                        NONE          resolved False     neutral
+   C006 2026-W35            DOUBLE_CHARGE     complaint                  viewed_bill          DOC_BILL_STATEMENT             none                        NONE callback_promised False    negative
+   C007 2026-W35     SERVICE_INFO_GENERAL       inquiry                    media_sns                       OTHER             none                        NONE          resolved False     neutral
+   C008 2026-W35 CONTRACT_DETAILS_INQUIRY       inquiry              received_notice        DOC_CONTRACT_CONFIRM indirect_clarify        DOC_CONTRACT_CONFIRM          resolved False     neutral
+   C009 2026-W36            DOUBLE_CHARGE     complaint followup_of_previous_contact                        NONE             none                        NONE callback_promised  True    negative
+   C010 2026-W36      BILL_AMOUNT_INQUIRY       inquiry              received_notice DOC_RATE_CHANGE_NOTICE_2609           direct DOC_RATE_CHANGE_NOTICE_2609          resolved False     neutral
+   C011 2026-W36           CANCEL_REQUEST cancel_intent                      unknown             APP_CANCEL_FLOW           direct             APP_CANCEL_FLOW          resolved False     neutral
+   C012 2026-W37      BILL_AMOUNT_INQUIRY       inquiry                  viewed_bill          DOC_BILL_STATEMENT indirect_misread              TERM_PRORATION          resolved False     neutral
+   C013 2026-W37      BILL_AMOUNT_INQUIRY       inquiry              received_notice DOC_RATE_CHANGE_NOTICE_2609 indirect_clarify          TERM_BILLING_CYCLE          resolved False     neutral
+   C014 2026-W37      BILL_AMOUNT_INQUIRY       inquiry                  viewed_bill          DOC_BILL_STATEMENT           direct              TERM_PRORATION          resolved False    negative
+   C015 2026-W37           ADDRESS_CHANGE     procedure                   life_event                        NONE             none                        NONE          resolved False     neutral
+   C016 2026-W38      BILL_AMOUNT_INQUIRY       inquiry                word_of_mouth DOC_RATE_CHANGE_NOTICE_2609           direct DOC_RATE_CHANGE_NOTICE_2609          resolved False     neutral
+   C017 2026-W38      BILL_AMOUNT_INQUIRY       inquiry                  viewed_bill          DOC_BILL_STATEMENT indirect_misread              TERM_PRORATION          resolved False     neutral
+   C018 2026-W38        APP_LOGIN_TROUBLE       inquiry            app_or_web_change                   APP_LOGIN             none                        NONE          resolved False     neutral
+   C019 2026-W38      BILL_AMOUNT_INQUIRY     complaint                  viewed_bill          DOC_BILL_STATEMENT           direct          DOC_BILL_STATEMENT         escalated False    negative

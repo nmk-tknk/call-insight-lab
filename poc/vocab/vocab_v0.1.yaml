@@ -1,0 +1,55 @@
+vocab_version: "0.1"
+notes: >
+  PoC 用の初期語彙。実運用では reason は LLM 誘導+人の確認で作成し、
+  04_vocabulary_evolution.md の機構で自動更新する。
+reason:
+  BILLING:
+    - {code: BILL_AMOUNT_INQUIRY, desc: 請求金額の内訳・増減の照会}
+    - {code: DOUBLE_CHARGE, desc: 二重請求・重複計上の申告}
+    - {code: PAYMENT_METHOD_CHANGE, desc: 支払方法の変更}
+    - {code: PAYMENT_DUE_INQUIRY, desc: 支払期日・未払いの照会}
+  CONTRACT:
+    - {code: CANCEL_REQUEST, desc: 解約の申し出・手続き}
+    - {code: PLAN_CHANGE, desc: プラン変更}
+    - {code: CONTRACT_DETAILS_INQUIRY, desc: 契約内容の確認}
+  TECHNICAL:
+    - {code: APP_LOGIN_TROUBLE, desc: アプリ・Web のログイン障害}
+    - {code: SERVICE_OUTAGE, desc: サービス利用不可}
+  PROCEDURE:
+    - {code: ADDRESS_CHANGE, desc: 住所変更}
+    - {code: NAME_CHANGE, desc: 氏名変更}
+    - {code: DOCUMENT_REISSUE, desc: 書類再発行}
+  COMPLAINT:
+    - {code: AGENT_CONDUCT, desc: 応対への苦情}
+    - {code: GENERAL_COMPLAINT, desc: その他の苦情}
+  INFO:
+    - {code: SERVICE_INFO_GENERAL, desc: サービス全般の一般的な問い合わせ}
+  OTHER:
+    - {code: OTHER, desc: 上記に該当しない(other_text 必須)}
+request_type: [inquiry, procedure, complaint, cancel_intent, feedback, other]
+trigger_code:
+  - {code: received_notice, desc: 当社からの書面・通知を受け取った}
+  - {code: viewed_bill, desc: 請求書・明細・引落を見た}
+  - {code: app_or_web_change, desc: アプリ・Web の更新や画面変更}
+  - {code: media_sns, desc: 報道・CM・SNS を見た}
+  - {code: word_of_mouth, desc: 知人・家族から聞いた}
+  - {code: followup_of_previous_contact, desc: 前回の問い合わせの続き・催促}
+  - {code: our_outbound_contact, desc: 当社からの電話・メールへの折り返し}
+  - {code: life_event, desc: 引越し・結婚など顧客側の事情}
+  - {code: unknown, desc: 発話から特定できない}
+  - {code: other, desc: 上記以外(other_text 必須)}
+product_code: [PLAN_A, PLAN_B, OPTION_SECURITY, APP, UNKNOWN]
+touchpoint_code:
+  - {code: DOC_BILL_STATEMENT, desc: 請求書・請求明細}
+  - {code: DOC_RATE_CHANGE_NOTICE_2609, desc: 2026年9月 料金改定のお知らせ(書面)}
+  - {code: DOC_CONTRACT_CONFIRM, desc: 契約内容確認書}
+  - {code: APP_LOGIN, desc: アプリのログイン・パスワード再設定画面}
+  - {code: APP_CANCEL_FLOW, desc: アプリの解約手続き導線}
+  - {code: WEB_MYPAGE, desc: マイページ}
+  - {code: TERM_PRORATION, desc: 「日割り」という用語・計算}
+  - {code: TERM_BILLING_CYCLE, desc: 「締め日」「請求月」など請求サイクルの用語}
+  - {code: NONE, desc: 特定の接点なし}
+  - {code: OTHER, desc: 上記以外(other_text 必須)}
+confusion_type: [direct, indirect_misread, indirect_clarify, none]
+resolution_status: [resolved, escalated, callback_promised, unresolved, unknown]
+emotion_end: [negative, neutral, positive]
