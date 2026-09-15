@@ -21,6 +21,8 @@ LLM を使って各通話を固定スキーマの構造化データ(通話 1 件
   「ターン帰属+用件単位」設計と先行研究・商用製品の突き合わせ。借用すべき名前・層構造・境界規則・評価指標と、設計 v0.3 の骨子。
 - [docs/study/06_v03_concept.md](docs/study/06_v03_concept.md)
   v0.3 の結論とコンセプトの一枚紙(4 原則、データモデル、処理の流れ、できること・できないこと)。
+- [docs/study/07_schema_v03.md](docs/study/07_schema_v03.md)
+  スキーマ v0.3 確定版。処理と切り分け、確定事項 10 点、ER 図、不変条件、集計例。DDL は [poc/schema/v0_3.sql](poc/schema/v0_3.sql)。
 
 ## PoC
 
