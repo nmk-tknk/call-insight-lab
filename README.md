@@ -24,7 +24,7 @@ LLM を使って各通話を固定スキーマの構造化データ(通話 1 件
 - [docs/study/07_schema_v03.md](docs/study/07_schema_v03.md)
   スキーマ v0.3 確定版。処理と切り分け、確定事項 10 点、ER 図、不変条件、集計例。DDL は [poc/schema/v0_3.sql](poc/schema/v0_3.sql)。
 - [docs/study/08_information_loss_inventory.md](docs/study/08_information_loss_inventory.md)
-  スキーマ v0.3 で落ちる情報の網羅的な棚卸し(49 項目)。取込時にしか得られない情報、再注釈で回復できる情報、v0.3.1 で追加すべき列。
+  スキーマ v0.3 で落ちる情報の棚卸し(58 項目)。「今決めないと戻らない(取込時のみ)/ 再注釈で回復できる / 語彙に潰す本質的損失 / 意図的除外」の軸で整理し、v0.3.1 への追加一覧と v0.2 → v0.3 の置き換え対応表を含む。
 
 ## PoC
 
