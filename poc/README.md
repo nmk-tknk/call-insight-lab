@@ -16,6 +16,7 @@
 | `src/verify_evidence.py` | 根拠引用が書き起こし本文に逐語一致するかを機械検証 |
 | `src/aggregate.py` | DuckDB による集計。目的 (a) 急増真因、(b) わかりづらいパターン、外部整合、語彙進化シグナル |
 | `out/aggregate_report.txt` | 集計出力 |
+| `schema/v0_3.sql`, `schema/v0_3_1.sql` | 論理スキーマ v0.3 と、その追加差分 v0.3.1(07・08 参照)。`schema/check_v0_3_1.py` で DuckDB に順に適用し不変条件を検査 |
 
 実行:
 
