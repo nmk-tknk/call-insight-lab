@@ -122,7 +122,7 @@
 | D | **Web 証券への移行**で紙の証券が届かなくなり「証券が来ない = 契約されていない」と誤解 | W06〜W12 | #18 が 3 倍。trigger = received_notice(移行案内)/ 不着、confusion = indirect_misread × DOC_POLICY_CERT。#29(マイページ)も 2 倍 | #7(解約)が競合キャンペーンで 1.5 倍。移行とは無関係 |
 | E | **引落し日の変更案内**が読まれず、督促ハガキが一斉に届いた | W30〜W33 | #17 が 5 倍、#3 が 2 倍。trigger = received_notice × DOC_PAYMENT_REMINDER、confusion = direct × DOC_PAYMENT_REMINDER。emotion_start = negative が増える | なし |
 
-第 2 段の 2,000 件は 26 週にわたり、平常期間の分布(§2 の比率)に選ばれた 1 本の署名を重ねて生成する。分割半分再現(02 §4)のため、各週の件数は 60〜100 の幅で揺らす。
+第 2 段の 2,000 件は 26 週にわたり、平常期間の分布(§2 の比率)に選ばれた 1 本の署名を重ねて生成する。封印ファイルには急増シナリオに加え、目録(12)の代表的な問い(1, 2, 6, 12, 20, 21, 27, 29, 40)に対応する「埋め込んだ事実の一覧」(例: 解約の動機の分布、引き止め提案の成功率、更新案内の様式別の混乱件数、終了時に否定的な割合)を書き、分析者がそれぞれの問いを回して再現できるかを見る。分割半分再現(02 §4)のため、各週の件数は 60〜100 の幅で揺らす。
 
 ## 6. 合成個人情報とマスキング検証(09 Q6 の回答を受けて)
 
@@ -211,8 +211,10 @@ clean_dialogue (話者付きターン列。句読点あり)
         ↓ 規則(決定的、seed 付き)
 noisy_transcript (§4 の乱れ) + turns.start_ms/end_ms + events + synth_pii_spans
         ↓
-ground_truth run: annotation_runs(annotator='synthetic:gen_v1') に issues / issue_turns / turn_phases / evidence(引用は clean 側から取り、noisy 側に位置を写像)/ agent_actions / turn_flags を保存
+ground_truth run: annotation_runs(annotator='synthetic:gen_v1', schema_version='0.4') に issues(構造のみ)/ issue_turns / turn_phases / acts(発話行為。引用は clean 側から取り、noisy 側に位置を写像)を保存。判断列は保存せず、正解からも v_issue_derived で導く(13 §8)
 ```
+
+生成仕様では、用件ごとに「動機を言わせるか、匂わせるだけか」「オペレータに訂正させるか、既知の誤解一覧に任せるか」「感情の表出を入れるか、種類と位置」を乱択し、明言と含意の比率を記録する。これが v0.4 で失う量(13 §7)の測定条件になる。口調は生成しない。
 
 生成用 LLM と抽出用 LLM は別にする(09 SD6)。生成には個人情報が含まれないので外部 API を使ってよく、一度きりの費用で済む。抽出はローカル LLM を想定する(§9)。
 
