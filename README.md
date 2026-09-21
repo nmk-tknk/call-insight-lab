@@ -7,6 +7,11 @@
 LLM を使って各通話を「原文 / 構造 / 根拠」の 3 層に半構造化し、構造層(用件ごとに固定の項目へ閉じた語彙の値を入れたもの)に対する SQL / BI の単純集計で分析する。通話 1 件 = 1 行の表は構造層から導出する。
 構造で覆えない問いはスキーマの不備として塞ぎ、問いに答えるために原文へ LLM を当て直すことはしない(06 原則 5)。注釈層に書くのは構造と明言だけで、判断は集計時の規則で導く(06 原則 6、v0.4)。
 
+## 決定記録と作業規則
+
+- [docs/decisions/](docs/decisions/README.md): 設計・方針の決定を 1 決定 1 ファイルで記録する(承認済みは不変、覆すときは新記録)。
+- [CLAUDE.md](CLAUDE.md): Claude Code の作業規則。発言の種別(決定 / 提案 / 仮説 / 訂正)、議論ターンと適用ターンの分離、docs 編集の hook 検査。
+
 ## ドキュメント
 
 - [docs/study/01_llm_structuring_feasibility.md](docs/study/01_llm_structuring_feasibility.md)
