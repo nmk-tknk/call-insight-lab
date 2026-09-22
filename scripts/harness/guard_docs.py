@@ -9,6 +9,7 @@
      その adr が承認済みで、date が今日で、対象パスがその記録の「影響を受ける文書」に含まれるときだけ許す。
   2. docs/decisions/ の既存ファイルのうち「状態: 承認済み」のものは常に書き込み禁止(「覆された:」の 1 行追記は Edit で許す)。
      草案と新規ファイル、README.md、APPLY は自由。
+     docs/decisions/DECISIONS.md(結論の唯一の置き場)は、APPLY が有効(承認済みの記録と当日の日付)なときだけ許す。
   3. Bash は、コマンド文字列に docs/ が現れ、かつ書き込みらしい語が含まれるとき、文字列から docs/ のパスを拾って同じ検査をする。
 """
 import json, os, re, sys, datetime, pathlib
@@ -65,6 +66,10 @@ def check_target(target, tool, tool_input):
     if target.startswith("docs/decisions/"):
         p = ROOT / target
         if p.name in ("README.md", "APPLY", "0000-template.md"): return
+        if p.name == "DECISIONS.md":
+            _, err = load_apply()
+            if err: deny(f"{target} の編集を拒否: {err}")
+            return
         if p.exists() and adr_status(p) == "承認済み":
             # 「覆された:」の 1 行追記だけは許す
             if tool == "Edit" and re.fullmatch(r"\s*- 覆された:.*\s*", (tool_input.get("new_string") or "").replace(tool_input.get("old_string") or "", "", 1)):
