@@ -222,4 +222,4 @@ poc/out/verified.jsonl
 poc/out/extracted.jsonl
 
 # ハーネス: 適用ターンの一時ファイル
-docs/decisions/APPLY
+docs/APPLY
