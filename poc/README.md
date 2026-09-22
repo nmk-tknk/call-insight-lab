@@ -1,6 +1,8 @@
 # PoC: 日本語通話サンプルの構造化と集計
 
-`docs/study/03_tag_only_schema.md` のスキーマ v0.2 を、自作の日本語通話サンプル 19 件に適用し、
+> **旧版(2026-09-22 注記)**: `src/extract.py`、`src/schema.py`、`prompts/extract_system.md`、`vocab/vocab_v0.1.yaml`、`samples/extracted.jsonl`、`out/aggregate_report.txt` はスキーマ v0.2(通話 1 件 = 1 行、タグのみ)に基づく旧版の PoC コードと結果である。現行スキーマは v0.4([docs/02_schema.md](../docs/02_schema.md))で、抽出器は v0.4(構造 → 発話行為の二段)に書き換える予定([docs/05_poc_plan.md](../docs/05_poc_plan.md) §6)。`schema/` の DDL と検査スクリプトは現行。
+
+スキーマ v0.2 を、自作の日本語通話サンプル 19 件に適用し、
 「抽出 → 根拠の逐語検証 → タグ集計」が通ることを確認した。
 
 ## 構成
@@ -16,7 +18,7 @@
 | `src/verify_evidence.py` | 根拠引用が書き起こし本文に逐語一致するかを機械検証 |
 | `src/aggregate.py` | DuckDB による集計。目的 (a) 急増真因、(b) わかりづらいパターン、外部整合、語彙進化シグナル |
 | `out/aggregate_report.txt` | 集計出力 |
-| `schema/v0_3.sql`, `schema/v0_3_1.sql`, `schema/v0_4.sql` | 論理スキーマ v0.3、追加差分 v0.3.1(07・08)、v0.4(13: 発話行為と導出ビュー)。`schema/check_v0_3_1.py` と `schema/check_v0_4.py` で DuckDB に順に適用し不変条件を検査 |
+| `schema/v0_3.sql`, `schema/v0_3_1.sql`, `schema/v0_4.sql` | 論理スキーマ v0.3、追加差分 v0.3.1、v0.4(発話行為と導出ビュー。[docs/02_schema.md](../docs/02_schema.md))。`schema/check_v0_3_1.py` と `schema/check_v0_4.py` で DuckDB に順に適用し不変条件を検査 |
 
 実行:
 
@@ -36,7 +38,7 @@ python -m src.extract --in samples/transcripts.jsonl --out out/extracted.jsonl
 
 また、サンプル通話は筋書きを決めて作成しているため、**「急増の真因が集計で出た」ことは手法の妥当性の証明にはならない。**
 本 PoC が示すのは、(1) スキーマがタグのみで成立すること、(2) 目的の数値が GROUP BY で出ること、(3) 品質ゲートが機械的に回ること、の 3 点に限る。
-妥当性の検証は実データと既知事例(02 §6)で行う。
+妥当性の検証は実データと既知事例([docs/05_poc_plan.md](../docs/05_poc_plan.md) §4)で行う。
 
 ## 結果の要約
 
@@ -47,14 +49,14 @@ python -m src.extract --in samples/transcripts.jsonl --out out/extracted.jsonl
 - 目的 (b): 接点 × 訴え方の表で、`TERM_PRORATION`(日割り)と `DOC_RATE_CHANGE_NOTICE_2609`(改定通知)が上位。
   下流コスト列(通話時間、未解決率、終了時ネガ率)も同じクエリで出る。
 - 外部整合: `callback_promised` の 7 日以内再入電率 0.5、`resolved` は 0。LLM の判定と CRM 側の事実が矛盾していない(件数は少なすぎるが、検証の型は動く)。
-- 語彙進化シグナル: `touchpoint` の other が 2 件(初月無料の適用条件、テレビ CM)。実運用ではこれが 04 の検知ループの入力になる。
+- 語彙進化シグナル: `touchpoint` の other が 2 件(初月無料の適用条件、テレビ CM)。実運用ではこれが 語彙進化ループ([docs/03_vocabulary.md](../docs/03_vocabulary.md))の入力になる。
 
 ## 試してわかった設計上の教訓
 
 1. **汎用の受け皿カテゴリは other を隠す。** `SERVICE_INFO_GENERAL` を用意したため、家族割キャンペーンの問い合わせ(C007)が other に落ちず、
    新テーマの検知シグナルが弱まった。受け皿カテゴリは作らないか、other と同様に監視対象にする。
 2. **用語と書面の境界が揺れる。** 「日割り」への混乱を `TERM_PRORATION` にするか `DOC_BILL_STATEMENT` にするかで判断が割れた(C019)。
-   語彙は階層化して(`DOC_BILL_STATEMENT > TERM_PRORATION`)親でも集計できるようにするべき。04 の「親の子として追加」の原則がここでも効く。
+   語彙は階層化して(`DOC_BILL_STATEMENT > TERM_PRORATION`)親でも集計できるようにするべき。語彙進化の「親の子として追加」の原則([docs/03_vocabulary.md](../docs/03_vocabulary.md) §2.5)がここでも効く。
 3. **trigger と reason の分離は有効だった。** 同じ `BILL_AMOUNT_INQUIRY` でも、`viewed_bill`(請求書を見て誤解)と `received_notice`(通知を読んで確認)と
    `word_of_mouth`(近所で聞いた)で対処が違う。真因分析の軸として残す価値がある。
 4. **根拠が取れない判断がある。** C015 は顧客の了承発話が「はい」のみで、逐語引用として意味をなさない。
